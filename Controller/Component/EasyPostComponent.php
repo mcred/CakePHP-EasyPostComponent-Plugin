@@ -61,59 +61,180 @@ class EasyPostComponent extends Component {
 		}
 
 		\EasyPost\EasyPost::setApiKey($this->key);
-
 	}
 
-	public function AddressCreate($address_params) {
-		return json_decode(\EasyPost\Address::create($address_params), true);
-	}
-
-	public function AddressRetrieve($id) {
-		return json_decode(\EasyPost\Address::retrieve($id), true);
-	}
-
-	public function AddressVerify($address_params) {
-		return json_decode(\EasyPost\Address::verify($address_params), true);
-	}
-
-	public function AddressCreateAndVerify($address_params) {
-		return json_decode(\EasyPost\Address::create_and_verify($address_params), true);
-	}
-
-	public function AddressAll(){
-		$return = array();
-		foreach (\EasyPost\Address::all() as $address) {
-			array_push($return, json_decode($address, true));	
+/**
+ * The AddressCreate method creates a new address object.
+ * 
+ *
+ * @param array $params collected address information.
+ * @param string $type desired response format.
+ * @return object/array $address if success, boolean false if failure or not found.
+ */
+	public function AddressCreate($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Address::create($params), true);
+		} else {
+			return \EasyPost\Address::create($params);
 		}
-		return $return;
 	}
 
-	public function ParcelCreate($parcel){
-		return json_decode(\EasyPost\Parcel::create($parcel), true);
-	}
-
-	public function ParcelRetrieve($id){
-		return json_decode(\EasyPost\Parcel::retrieve($id), true);
-	}
-
-	public function ParcelAll(){
-		$return = array();
-		foreach (\EasyPost\Parcel::all() as $parcel) {
-			array_push($return, json_decode($parcel, true));	
+/**
+ * The AddressRetrieve method retrieves an address object.
+ * 
+ *
+ * @param string $params an address object id.
+ * @param string $type desired response format.
+ * @return object/array $address if success, boolean false if failure or not found.
+ */
+	public function AddressRetrieve($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Address::retrieve($params), true);
+		} else {
+			return \EasyPost\Address::retrieve($params);
 		}
-		return $return;
 	}
 
+/**
+ * The AddressVerify method verifies if an address is valid.
+ * USA addresses only.
+ *
+ * @param object $params an address object.
+ * @param string $type desired response format.
+ * @return object/array $address if success, boolean false if failure or not found.
+ */
+	public function AddressVerify($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode($params->verify(), true);
+		} else {
+			return $params->verify();
+		}
+	}
 
+/**
+ * The AddressCreateAndVerify method creates and verifies if an address is valid.
+ * USA addresses only.
+ *
+ * @param object $params an address object.
+ * @param string $type desired response format.
+ * @return object/array $address if success, boolean false if failure or not found.
+ */
+	public function AddressCreateAndVerify($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Address::create_and_verify($params), true);
+		} else {
+			return \EasyPost\Address::create_and_verify($params);
+		}
+	}
 
+/**
+ * The AddressAll method retrieves all address objects.
+ * 
+ *
+ * @param string $type desired response format.
+ * @return object/array $addresses if success, boolean false if failure or not found.
+ */
+	public function AddressAll($type = 'json'){
+		if($type == 'json'){
+			$return = array();
+			foreach (\EasyPost\Address::all() as $address) {
+				array_push($return, json_decode($address, true));	
+			}
+			return $return;
+		} else {
+			return \EasyPost\Address::all();
+		}
+	}
 
+/**
+ * The ParcelCreate method creates a new parcel object.
+ * 
+ *
+ * @param array $params collected parcel information.
+ * @param string $type desired response format.
+ * @return object/array $parcel if success, boolean false if failure or not found.
+ */
+	public function ParcelCreate($params, $type = 'json'){
+		if($type == 'json'){
+			return json_decode(\EasyPost\Parcel::create($params), true);
+		} else {
+			return \EasyPost\Parcel::create($params);
+		}
+	}
 
+/**
+ * The ParcelRetrieve method retrieves a parcel object.
+ * 
+ *
+ * @param string $params an address object id.
+ * @param string $type desired response format.
+ * @return object/array $parcel if success, boolean false if failure or not found.
+ */
+	public function ParcelRetrieve($params, $type = 'json'){
+		if($type == 'json'){
+			return json_decode(\EasyPost\Parcel::retrieve($params), true);
+		} else {
+			return \EasyPost\Parcel::retrieve($params);
+		}
+	}
 
+/**
+ * The ParcelAll method retrieves all parcel objects.
+ * 
+ *
+ * @param string $type desired response format.
+ * @return object/array $parcels if success, boolean false if failure or not found.
+ */
+	public function ParcelAll($type = 'json'){
+		if($type == 'json'){
+			$return = array();
+			foreach (\EasyPost\Parcel::all() as $parcel) {
+				array_push($return, json_decode($parcel, true));	
+			}
+			return $return;
+		} else {
+			return \EasyPost\Parcel::all();
+		}
+	}
 
+/**
+ * The ShipmentCreate creates a shipment object.
+ * 
+ *
+ * @param array $params collected parcel information.
+ * @param string $type desired response format.
+ * @return object/array $parcel if success, boolean false if failure or not found.
+ */
+	public function ShipmentCreate($params, $type = 'obj'){
+		if($type == 'json'){
+			return json_decode(\EasyPost\Shipment::create($params), true);
+		} else {
+			return \EasyPost\Shipment::create($params);
+		}
+	}
 
+/**
+ * The ShipmentBuy method buys postage for a shipment object.
+ * 
+ *
+ * @param object $params collected parcel information.
+ * @param string $rate desired shipping rate.
+ * @return object/array $parcel if success, boolean false if failure or not found.
+ */
+	public function ShipmentBuy($params, $rate = 'lowest'){
+		if($rate == 'lowest'){
+			return $params->buy($params->lowest_rate());
+		}
+	}
 
-
-
-
-
+/**
+ * The PostageLabelURL method returns a URL for postage label.
+ * 
+ *
+ * @param object $params collected shipment information.
+ * @return string $url if success, boolean false if failure or not found.
+ */
+	public function PostageLabelURL($params){
+		return $params->postage_label->label_url;
+	}
 }
