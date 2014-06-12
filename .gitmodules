@@ -1,0 +1,3 @@
+[submodule "Vendor/easypost-php"]
+	path = Vendor/easypost-php
+	url = https://github.com/EasyPost/easypost-php.git
