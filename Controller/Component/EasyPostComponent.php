@@ -48,11 +48,16 @@ class EasyPostComponent extends Component {
 			array('file' => 'easypost-php' . DS . 'lib' . DS . 'easypost.php')
 		);
 
-		/*
-		if (!class_exists('EasyPost')) {
+		//Check if EasyPost class is loaded
+		if (!class_exists('\EasyPost\EasyPost')) {
 			throw new CakeException('EasyPost Libray is missing or could not be loaded.');
 		}
-		*/
+
+		// if mode is set in bootstrap.php, use it. otherwise, Test.
+		$mode = Configure::read('EasyPost.Mode');
+		if ($mode) {
+			$this->mode = $mode;
+		}
 
 		// set the EasyPost API key
 		$this->key = Configure::read('EasyPost.' . $this->mode . '.ApiKey');
@@ -80,18 +85,18 @@ class EasyPostComponent extends Component {
 	}
 
 /**
- * The AddressRetrieve method retrieves an address object.
- * 
+ * The AddressCreateAndVerify method creates and verifies if an address is valid.
+ * USA addresses only.
  *
- * @param string $params an address object id.
+ * @param object $params an address object.
  * @param string $type desired response format.
  * @return object/array $address if success, boolean false if failure or not found.
  */
-	public function AddressRetrieve($params, $type = 'json') {
+	public function AddressCreateAndVerify($params, $type = 'json') {
 		if($type == 'json'){
-			return json_decode(\EasyPost\Address::retrieve($params), true);
+			return json_decode(\EasyPost\Address::create_and_verify($params), true);
 		} else {
-			return \EasyPost\Address::retrieve($params);
+			return \EasyPost\Address::create_and_verify($params);
 		}
 	}
 
@@ -112,18 +117,18 @@ class EasyPostComponent extends Component {
 	}
 
 /**
- * The AddressCreateAndVerify method creates and verifies if an address is valid.
- * USA addresses only.
+ * The AddressRetrieve method retrieves an address object.
+ * 
  *
- * @param object $params an address object.
+ * @param string $params an address object id.
  * @param string $type desired response format.
  * @return object/array $address if success, boolean false if failure or not found.
  */
-	public function AddressCreateAndVerify($params, $type = 'json') {
+	public function AddressRetrieve($params, $type = 'json') {
 		if($type == 'json'){
-			return json_decode(\EasyPost\Address::create_and_verify($params), true);
+			return json_decode(\EasyPost\Address::retrieve($params), true);
 		} else {
-			return \EasyPost\Address::create_and_verify($params);
+			return \EasyPost\Address::retrieve($params);
 		}
 	}
 
@@ -145,6 +150,94 @@ class EasyPostComponent extends Component {
 			return \EasyPost\Address::all();
 		}
 	}
+
+
+
+
+
+
+
+
+	public function BatchRetreive($params, $type = 'json'){
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::retrieve($params), true);
+		} else {
+			return \EasyPost\Batch::retrieve($params);
+		}
+
+	}
+
+	public function BatchAll($type = 'json'){
+		if($type == 'json'){
+			$return = array();
+			foreach (\EasyPost\Batch::all() as $batch) {
+				array_push($return, json_decode($batch, true));	
+			}
+			return $return;
+		} else {
+			return \EasyPost\Batch::all();
+		}
+
+	}
+
+	public function BatchCreate($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::create($params), true);
+		} else {
+			return \EasyPost\Batch::create($params);
+		}
+	}
+
+	public function BatchCreateAndBuy($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::create_and_buy($params), true);
+		} else {
+			return \EasyPost\Batch::create_and_buy($params);
+		}
+	}
+
+	public function BatchBuy($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::buy($params), true);
+		} else {
+			return \EasyPost\Batch::buy($params);
+		}
+	}
+
+	public function BatchLabel($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::label($params), true);
+		} else {
+			return \EasyPost\Batch::label($params);
+		}
+	}
+
+	public function BatchRemoveShipments($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::remove_shipments($params), true);
+		} else {
+			return \EasyPost\Batch::remove_shipments($params);
+		}
+	}
+
+	public function BatchAddShipments($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::add_shipments($params), true);
+		} else {
+			return \EasyPost\Batch::add_shipments($params);
+		}
+	}
+
+	public function BatchCreateScanForm($params, $type = 'json') {
+		if($type == 'json'){
+			return json_decode(\EasyPost\Batch::create_scan_form($params), true);
+		} else {
+			return \EasyPost\Batch::create_scan_form($params);
+		}
+	}
+
+
+
 
 /**
  * The ParcelCreate method creates a new parcel object.
